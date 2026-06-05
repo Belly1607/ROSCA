@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 220px;
+    margin-top: 70px;
+    width: calc(100% - 220px);
+    padding: 30px;
+    overflow-y: auto;
+}

@@ -1,0 +1,164 @@
+.loan-page {
+    min-height: calc(100vh - 70px);
+
+    background-image:
+        linear-gradient(
+            rgba(5,10,25,0.75),
+            rgba(5,10,25,0.85)
+        ),
+        url("../assets/church-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    padding: 40px 20px;
+}
+
+.loan-container {
+    max-width: 700px;
+    width: 100%;
+
+    margin: 0 auto;
+}
+.loan-header {
+    background: linear-gradient(
+        135deg,
+        #8B1E3F,
+        #660F24
+    );
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+.loan-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.loan-header p {
+    color: #e2e8f0;
+}
+
+.loan-form {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    background: rgba(30, 41, 59, 0.95);
+
+    border-radius: 24px;
+
+    padding: 35px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-weight: 600;
+
+    color: white;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+
+    padding: 16px;
+
+    border-radius: 16px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    background: rgba(255,255,255,0.06);
+
+    color: white;
+
+    font-size: 1rem;
+
+    transition: 0.3s ease;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    border-color: #c43b61;
+
+    box-shadow:
+        0 0 0 4px rgba(196,59,97,0.15);
+}
+
+.loan-summary {
+    background: rgba(255,255,255,0.05);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+}
+
+.loan-summary h3 {
+    margin-bottom: 15px;
+}
+
+.loan-summary p {
+    margin-bottom: 8px;
+    color: #dbeafe;
+}
+
+.submit-btn {
+    width: 100%;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        #8B1E3F,
+        #c43b61
+    );
+
+    color: white;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all .3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(196,59,97,0.35);
+}
