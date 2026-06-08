@@ -11,7 +11,7 @@ import "./page_css/Sidebar.css";
 import "./page_css/NavBar.css";
 import "./page_css/Home.css";
 import "./App.css";
-import "./page_css/LoanForm.css";
+import "./page_css/Loan.css";
 import "./page_css/Member.css";
 import "./page_css/MemberForm.css";
 import "./page_css/Report.css";
