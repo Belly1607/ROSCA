@@ -1,0 +1,818 @@
+:root {
+    --primary-red: #DC2F3E;
+    --dark-red: #B91C2E;
+    --light-red: #E54A55;
+    --dark-black: #0F1419;
+    --neutral-white: #FFFFFF;
+    --accent-gold: #E8B44F;
+    
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    
+    --success-green: #10B981;
+    
+    --font-display: 'Sohne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--dark-black);
+    background: var(--gray-50);
+}
+
+.loan-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+/* ===== HERO HEADER ===== */
+.loan-hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--dark-black) 0%, #1a1f2e 100%);
+    border-radius: 24px;
+    padding: 60px var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+    color: var(--neutral-white);
+    text-align: center;
+}
+
+.hero-accent {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--primary-red) 0%, transparent 70%);
+    opacity: 0.08;
+    border-radius: 50%;
+    bottom: -150px;
+    right: -100px;
+    pointer-events: none;
+}
+
+.loan-hero h1 {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 800;
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -1px;
+    position: relative;
+    z-index: 2;
+}
+
+.loan-hero p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== INFO CARDS ===== */
+.loan-info-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.info-card {
+    background: var(--neutral-white);
+    border: 2px solid var(--gray-200);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    border-color: var(--primary-red);
+    box-shadow: 0 12px 28px rgba(220, 47, 62, 0.1);
+    transform: translateY(-4px);
+}
+
+.info-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: var(--spacing-md);
+}
+
+.info-card h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark-black);
+    margin-bottom: var(--spacing-sm);
+}
+
+.info-card p {
+    color: var(--gray-500);
+    font-size: 14px;
+}
+
+/* ===== SUCCESS BANNER ===== */
+.success-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+    border: 2px solid var(--success-green);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    animation: slideInDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.success-content h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--success-green);
+    margin-bottom: var(--spacing-xs);
+}
+
+.success-content p {
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+/* ===== LOAN FORM SECTION ===== */
+.loan-form-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.loan-form-wrapper {
+    background: var(--neutral-white);
+    border: 2px solid var(--gray-200);
+    border-radius: 20px;
+    padding: var(--spacing-2xl);
+}
+
+.loan-form {
+    max-width: 100%;
+}
+
+.form-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dark-black);
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+    color: var(--gray-500);
+    font-size: 15px;
+    margin-bottom: var(--spacing-xl);
+    font-weight: 500;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group {
+    margin-bottom: var(--spacing-xl);
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    color: var(--dark-black);
+    margin-bottom: var(--spacing-sm);
+    font-size: 14px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: var(--spacing-md);
+    color: var(--primary-red);
+    font-weight: 700;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    background: var(--gray-50);
+    color: var(--dark-black);
+    transition: all 0.3s ease;
+}
+
+.currency-symbol + input {
+    padding-left: 40px;
+}
+
+.input-suffix {
+    position: absolute;
+    right: var(--spacing-md);
+    color: var(--gray-500);
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    background: var(--neutral-white);
+    box-shadow: 0 0 0 4px rgba(220, 47, 62, 0.1);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+    border-color: #EF4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.field-hint {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: var(--spacing-xs);
+}
+
+.error-message {
+    display: block;
+    color: #EF4444;
+    font-size: 12px;
+    margin-top: var(--spacing-xs);
+    font-weight: 600;
+}
+
+/* ===== INTEREST INFO ===== */
+.interest-info {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    border: 2px solid var(--gray-200);
+    border-radius: 14px;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+}
+
+.interest-item {
+    flex: 1;
+}
+
+.interest-label {
+    display: block;
+    font-size: 12px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.interest-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary-red);
+}
+
+.interest-note {
+    flex: 1;
+    color: var(--success-green);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ===== LOAN SUMMARY CARD ===== */
+.loan-summary-card {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    border: 2px solid var(--primary-red);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.summary-header h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dark-black);
+}
+
+.summary-status {
+    background: var(--accent-gold);
+    color: var(--dark-black);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.summary-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-label {
+    color: var(--gray-600);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.summary-value {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark-black);
+}
+
+.summary-divider {
+    height: 1px;
+    background: var(--gray-300);
+    margin: var(--spacing-md) 0;
+}
+
+.summary-item.total {
+    padding: var(--spacing-md);
+    background: var(--neutral-white);
+    border-radius: 10px;
+    border: 2px solid var(--primary-red);
+}
+
+.total-value {
+    color: var(--primary-red);
+    font-size: 20px;
+}
+
+.repayment-info {
+    background: var(--neutral-white);
+    padding: var(--spacing-md);
+    border-radius: 10px;
+    text-align: center;
+    color: var(--gray-600);
+    font-size: 13px;
+}
+
+.repayment-info strong {
+    color: var(--primary-red);
+    font-weight: 700;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: 0.5px;
+}
+
+.btn-submit {
+    width: 100%;
+    background: var(--primary-red);
+    color: var(--neutral-white);
+    box-shadow: 0 8px 20px rgba(220, 47, 62, 0.25);
+    margin-bottom: var(--spacing-lg);
+}
+
+.btn-submit:hover {
+    background: var(--dark-red);
+    box-shadow: 0 12px 28px rgba(220, 47, 62, 0.35);
+    transform: translateY(-3px);
+}
+
+.btn-primary {
+    background: var(--primary-red);
+    color: var(--neutral-white);
+    box-shadow: 0 8px 20px rgba(220, 47, 62, 0.25);
+}
+
+.btn-primary:hover {
+    background: var(--dark-red);
+    box-shadow: 0 12px 28px rgba(220, 47, 62, 0.35);
+    transform: translateY(-2px);
+}
+
+.form-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+/* ===== LOAN HISTORY ===== */
+.loan-history-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark-black);
+    margin-bottom: var(--spacing-xl);
+    letter-spacing: -0.5px;
+}
+
+.loan-history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.loan-history-card {
+    background: var(--neutral-white);
+    border: 2px solid var(--gray-200);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    transition: all 0.3s ease;
+}
+
+.loan-history-card:hover {
+    border-color: var(--primary-red);
+    box-shadow: 0 12px 28px rgba(220, 47, 62, 0.15);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.history-header h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark-black);
+}
+
+.status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.status-pending {
+    background: rgba(249, 115, 22, 0.1);
+    color: #EA580C;
+}
+
+.history-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item.full-width {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.history-label {
+    font-weight: 600;
+    color: var(--gray-600);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--dark-black);
+}
+
+.history-value.highlight {
+    color: var(--primary-red);
+    font-size: 16px;
+}
+
+.history-text {
+    color: var(--gray-600);
+    font-size: 14px;
+    margin: 0;
+}
+
+.history-divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: var(--spacing-md) 0;
+}
+
+.history-footer {
+    background: var(--gray-50);
+    padding: var(--spacing-md);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.monthly-payment {
+    color: var(--gray-600);
+    font-size: 13px;
+    margin: 0;
+}
+
+.monthly-payment strong {
+    color: var(--primary-red);
+    font-weight: 700;
+}
+
+/* ===== FAQ SECTION ===== */
+.loan-faq-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.faq-item {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    border: 2px solid var(--gray-200);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: var(--primary-red);
+    box-shadow: 0 8px 20px rgba(220, 47, 62, 0.1);
+    transform: translateY(-4px);
+}
+
+.faq-item h4 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-black);
+    margin-bottom: var(--spacing-sm);
+}
+
+.faq-item p {
+    color: var(--gray-600);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ===== CTA SECTION ===== */
+.loan-cta {
+    background: linear-gradient(135deg, var(--dark-black) 0%, #1a1f2e 100%);
+    border-radius: 20px;
+    padding: var(--spacing-2xl);
+    color: var(--neutral-white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.loan-cta::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--primary-red) 0%, transparent 70%);
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.loan-cta h2 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    z-index: 2;
+}
+
+.loan-cta p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    z-index: 2;
+}
+
+.loan-cta .btn {
+    position: relative;
+    z-index: 2;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .loan-page {
+        padding: var(--spacing-lg);
+    }
+
+    .loan-hero {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .loan-hero h1 {
+        font-size: 32px;
+    }
+
+    .loan-form-wrapper {
+        padding: var(--spacing-xl);
+    }
+
+    .form-title {
+        font-size: 24px;
+    }
+
+    .interest-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .loan-history-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .loan-cta h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loan-page {
+        padding: var(--spacing-md);
+    }
+
+    .loan-form-wrapper {
+        padding: var(--spacing-lg);
+    }
+
+    .form-title {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .summary-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .summary-status {
+        align-self: flex-start;
+    }
+
+    .history-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: var(--dark-black);
+    }
+
+    .loan-form-wrapper {
+        background: #222732;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: var(--neutral-white);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .interest-info {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .loan-summary-card {
+        background: #222732;
+        border-color: var(--primary-red);
+    }
+
+    .info-card {
+        background: #222732;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .loan-history-card {
+        background: #222732;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .faq-item {
+        background: #222732;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
