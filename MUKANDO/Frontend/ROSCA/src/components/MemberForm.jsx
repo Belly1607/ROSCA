@@ -1,11 +1,62 @@
+
 import { useState } from "react";
 
 function MemberForm() {
-
     const [newmember, setnewmember] = useState("");
     const [contact, setcontact] = useState("");
     const [email, setemail] = useState("");
     const [gender, setgender] = useState("");
+
+    const [error, seterror] = useState("");
+    const [success, setsuccess] = useState("");
+
+    const addMember = async (e) => {
+        e.preventDefault();
+
+        if (
+            newmember.trim() === "" ||
+            contact.trim() === "" ||
+            email.trim() === "" ||
+            gender.trim() === ""
+        ) {
+            seterror("All fields are required");
+            setsuccess("");
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "http://localhost:5000/members",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: newmember,
+                        contact,
+                        email,
+                        gender
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to add member");
+            }
+
+            setnewmember("");
+            setcontact("");
+            setemail("");
+            setgender("");
+
+            setsuccess("Member registered successfully");
+            seterror("");
+        } catch (err) {
+            seterror("Failed to register member");
+            setsuccess("");
+        }
+    };
 
     return (
         <div className="member-form-container">
@@ -17,7 +68,10 @@ function MemberForm() {
                 </p>
             </div>
 
-            <form className="member-form">
+            <form
+                className="member-form"
+                onSubmit={addMember}
+            >
 
                 <div className="form-group">
                     <label>Full Name</label>
@@ -50,7 +104,7 @@ function MemberForm() {
 
                     <input
                         type="email"
-                        placeholder="Enter email"
+                        placeholder="Enter email address"
                         value={email}
                         onChange={(e) =>
                             setemail(e.target.value)
@@ -81,6 +135,18 @@ function MemberForm() {
                     </select>
                 </div>
 
+                {error && (
+                    <p className="error-message">
+                        {error}
+                    </p>
+                )}
+
+                {success && (
+                    <p className="success-message">
+                        {success}
+                    </p>
+                )}
+
                 <button
                     type="submit"
                     className="submit-btn"
@@ -95,3 +161,4 @@ function MemberForm() {
 }
 
 export default MemberForm;
+
