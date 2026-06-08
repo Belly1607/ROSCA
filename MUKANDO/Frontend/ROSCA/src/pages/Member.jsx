@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Member() {
+
+    const [members, setMembers] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:5000/members")
+            .then((res) => res.json())
+            .then((data) => setMembers(data))
+            .catch((err) => console.error(err));
+    }, []);
+
     return (
         <div className="member-page">
 
@@ -25,27 +36,40 @@ function Member() {
                 <table className="member-table">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Gender</th>
+                            <th>Date Joined</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>John Doe</td>
-                            <td>0712345678</td>
-                            <td>john@email.com</td>
-                            <td>Male</td>
-                        </tr>
 
-                        <tr>
-                            <td>Sarah Doe</td>
-                            <td>0771234567</td>
-                            <td>sarah@email.com</td>
-                            <td>Female</td>
-                        </tr>
+                        {members.length === 0 ? (
+                            <tr>
+                                <td colSpan="6">
+                                    No members found
+                                </td>
+                            </tr>
+                        ) : (
+                            members.map((member) => (
+                                <tr key={member.id}>
+                                    <td>{member.id}</td>
+                                    <td>{member.membername}</td>
+                                    <td>{member.contact}</td>
+                                    <td>{member.email}</td>
+                                    <td>{member.gender}</td>
+                                    <td>
+                                        {new Date(
+                                            member.date_joined
+                                        ).toLocaleDateString()}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+
                     </tbody>
                 </table>
 
