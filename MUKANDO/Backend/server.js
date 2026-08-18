@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql2");
@@ -9,15 +8,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/test", (req, res) => {
-    res.json({ message: "working" });
-});
-
 const connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "your_password",
-    database: "ROSCA"
+    database: "rosca"
 });
 
 connection.connect((err) => {
@@ -28,37 +23,33 @@ connection.connect((err) => {
 
     console.log("Connected to MySQL");
 });
-connection.query(
-  "SELECT @@hostname AS hostname, @@port AS port, CURRENT_USER() AS user, @@datadir AS datadir",
-  (err, results) => {
-    console.log("SERVER INFO:", results);
-  }
-);
-connection.query(
-    "SELECT * FROM loan",
-    (err, results) => {
-        console.log("ALL LOANS:", results);
-    }
-);
+
+/* ===========================
+   MEMBERS
+=========================== */
+
 app.get("/members", (req, res) => {
-    const sql = "SELECT * FROM Member";
 
-    connection.query(sql, (err, results) => {
-        if (err) {
-            return res.status(500).json(err);
+    connection.query(
+        "SELECT * FROM member",
+        (err, results) => {
+
+            if (err) {
+                console.error(err);
+                return res.status(500).json(err);
+            }
+
+            res.json(results);
         }
-
-        res.json(results);
-    });
+    );
 });
 
 app.post("/members", (req, res) => {
-    console.log("Request body:", req.body);
 
     const { name, contact, email, gender } = req.body;
 
     const sql = `
-        INSERT INTO Member
+        INSERT INTO member
         (membername, contact, email, gender, date_joined)
         VALUES (?, ?, ?, ?, CURDATE())
     `;
@@ -67,12 +58,10 @@ app.post("/members", (req, res) => {
         sql,
         [name, contact, email, gender],
         (err, result) => {
+
             if (err) {
-                console.error("MYSQL ERROR:");
                 console.error(err);
-                return res.status(500).json({
-                    error: err.message
-                });
+                return res.status(500).json(err);
             }
 
             res.status(201).json({
@@ -82,24 +71,28 @@ app.post("/members", (req, res) => {
     );
 });
 
+/* ===========================
+   LOANS
+=========================== */
+
 app.get("/loans", (req, res) => {
+
     connection.query(
         "SELECT * FROM loan",
         (err, results) => {
+
             if (err) {
                 console.error(err);
                 return res.status(500).json(err);
             }
-
-            console.log("LOANS FOUND:", JSON.stringify(results, null, 2));
 
             res.json(results);
         }
     );
 });
 
-
 app.post("/loans", (req, res) => {
+
     const {
         member_id,
         amount,
@@ -111,7 +104,7 @@ app.post("/loans", (req, res) => {
     } = req.body;
 
     const sql = `
-        INSERT INTO Loan
+        INSERT INTO loan
         (
             member_id,
             amount,
@@ -123,7 +116,7 @@ app.post("/loans", (req, res) => {
             statusapproval,
             date_applied
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE())
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', CURDATE())
     `;
 
     connection.query(
@@ -135,72 +128,66 @@ app.post("/loans", (req, res) => {
             interestRate,
             totalInterest,
             totalRepayment,
-            reason,
-            "Pending"
+            reason
         ],
         (err, result) => {
+
             if (err) {
                 console.error(err);
-                return res.status(500).json({
-                    error: err.message
-                });
+                return res.status(500).json(err);
             }
 
             res.status(201).json({
-                message: "Loan application submitted sucessfully",
+                message: "Loan submitted successfully",
                 id: result.insertId
             });
         }
     );
 });
 
+/* ===========================
+   DASHBOARD
+=========================== */
+
 app.get("/dashboard", (req, res) => {
 
-    const membersSql =
-        "SELECT COUNT(*) AS totalMembers FROM Member";
-
-    const loansSql =
-        "SELECT COUNT(*) AS activeLoans FROM Loan";
-
-    const balanceSql =
-        "SELECT IFNULL(SUM(amount_paid),0) AS totalBalance FROM Transactions";
-
-    connection.query(membersSql, (err, members) => {
-
-        if (err) {
-            return res.status(500).json(err);
-        }
-
-        connection.query(loansSql, (err, loans) => {
+    connection.query(
+        "SELECT COUNT(*) AS totalMembers FROM member",
+        (err, members) => {
 
             if (err) {
                 return res.status(500).json(err);
             }
 
-            connection.query(balanceSql, (err, balance) => {
+            connection.query(
+                "SELECT COUNT(*) AS activeLoans FROM loan",
+                (err, loans) => {
 
-                if (err) {
-                    return res.status(500).json(err);
+                    if (err) {
+                        return res.status(500).json(err);
+                    }
+
+                    connection.query(
+                        "SELECT IFNULL(SUM(amount_paid),0) AS totalBalance FROM transactions",
+                        (err, balance) => {
+
+                            if (err) {
+                                return res.status(500).json(err);
+                            }
+
+                            res.json({
+                                totalMembers: members[0].totalMembers,
+                                activeLoans: loans[0].activeLoans,
+                                totalBalance: balance[0].totalBalance
+                            });
+                        }
+                    );
                 }
-
-                res.json({
-                    totalMembers: members[0].totalMembers,
-                    activeLoans: loans[0].activeLoans,
-                    totalBalance: balance[0].totalBalance
-                });
-
-            });
-
-        });
-
-    });
+            );
+        }
+    );
 });
 
-
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(5000, () => {
+    console.log("Server running on port 5000");
 });
-

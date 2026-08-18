@@ -696,6 +696,11 @@ body {
     z-index: 2;
 }
 
+.status-completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-green);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .loan-page {
