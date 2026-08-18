@@ -1,325 +1,109 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import LoanForm from "../components/LoanForm";
 
-export default function Loan() {
-
+function Loan() {
     const [loans, setLoans] = useState([]);
-    const [submitted, setSubmitted] = useState(false);
 
-    const navigate = useNavigate();
-
-    const fetchLoans = () => {
-        fetch("http://localhost:5000/loans")
-            .then((res) => res.json())
-            .then((data) => setLoans(data))
-            .catch((err) => console.error(err));
+    const fetchLoans = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/loans");
+            const data = await response.json();
+            setLoans(data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
         fetchLoans();
     }, []);
 
-    const handleLoanSubmit = () => {
-
-        fetchLoans();
-
-        setSubmitted(true);
-
-        setTimeout(() => {
-            setSubmitted(false);
-        }, 3000);
-    };
-
     return (
         <div className="loan-page">
-
-            {/* Hero Section */}
             <div className="loan-hero">
                 <div className="hero-accent"></div>
-
-                <h1>Welfare Loan Program</h1>
-
-                <p>
-                    Fast, fair lending to support members
-                    during times of need.
-                </p>
+                <h1>Loan Management</h1>
+                <p>Apply for a loan or review submitted applications</p>
             </div>
 
             <div className="loan-info-section">
-
                 <div className="info-card">
-                    <span className="info-icon">⚡</span>
-
-                    <h3>Quick Process</h3>
-
-                    <p>
-                        Applications reviewed within
-                        3–5 working days.
-                    </p>
+                    <span className="info-icon">💰</span>
+                    <h3>Flexible Amounts</h3>
+                    <p>Borrow what you need, repaid over a comfortable duration</p>
                 </div>
-
                 <div className="info-card">
-                    <span className="info-icon">💯</span>
-
-                    <h3>Transparent Rates</h3>
-
-                    <p>
-                        Clear interest calculations
-                        with no hidden charges.
-                    </p>
+                    <span className="info-icon">📅</span>
+                    <h3>20% Interest</h3>
+                    <p>Applied only on loans with duration of 3 months or more</p>
                 </div>
-
                 <div className="info-card">
-                    <span className="info-icon">🤝</span>
-
-                    <h3>Community First</h3>
-
-                    <p>
-                        Flexible repayment plans
-                        designed for members.
-                    </p>
+                    <span className="info-icon">✅</span>
+                    <h3>Quick Approval</h3>
+                    <p>Applications reviewed promptly by the welfare committee</p>
                 </div>
-
             </div>
-
-            {submitted && (
-
-                <div className="success-banner">
-
-                    <span className="success-icon">
-                        ✅
-                    </span>
-
-                    <div>
-                        <h3>Loan Submitted</h3>
-
-                        <p>
-                            Your application has been
-                            successfully recorded.
-                        </p>
-                    </div>
-
-                </div>
-
-            )}
 
             <div className="loan-form-section">
-                <LoanForm onSubmit={handleLoanSubmit} />
+                <div className="loan-form-wrapper">
+                    <LoanForm onLoanAdded={fetchLoans} />
+                </div>
             </div>
 
-            {/* Loan History */}
             <div className="loan-history-section">
-
-                <h2 className="section-title">
-                    Loan Applications
-                </h2>
-
-                {loans.length === 0 ? (
-
-                    <div className="empty-state">
-                        No loan applications found.
-                    </div>
-
-                ) : (
-
-                    <div className="loan-history-grid">
-
-                        {loans.map((loan) => (
-
-                            <div
-                                key={loan.id}
-                                className="loan-history-card"
-                            >
-
+                <h2 className="section-title">Submitted Loans</h2>
+                <div className="loan-history-grid">
+                    {loans.length === 0 ? (
+                        <p style={{ color: "var(--gray-500)" }}>No loans submitted yet.</p>
+                    ) : (
+                        loans.map((loan) => (
+                            <div key={loan.id} className="loan-history-card">
                                 <div className="history-header">
-
-                                    <h3>
-                                        Loan #{loan.id}
-                                    </h3>
-
-                                    <span
-                                        className={`status-badge status-${loan.statusapproval?.toLowerCase()}`}
-                                    >
+                                    <h3>Loan #{loan.id}</h3>
+                                    <span className={`status-badge ${
+                                        loan.statusapproval === "repaid"
+                                            ? "status-completed"
+                                            : "status-pending"
+                                    }`}>
                                         {loan.statusapproval}
                                     </span>
-
                                 </div>
-
                                 <div className="history-items">
-
                                     <div className="history-item">
-                                        <span className="history-label">
-                                            Amount
-                                        </span>
-
-                                        <span className="history-value">
-                                            $
-                                            {Number(
-                                                loan.amount
-                                            ).toLocaleString()}
-                                        </span>
+                                        <span className="history-label">Member ID</span>
+                                        <span className="history-value">{loan.member_id}</span>
                                     </div>
-
                                     <div className="history-item">
-                                        <span className="history-label">
-                                            Duration
-                                        </span>
-
-                                        <span className="history-value">
-                                            {loan.duration} Months
-                                        </span>
-                                    </div>
-
-                                    <div className="history-item">
-                                        <span className="history-label">
-                                            Interest Rate
-                                        </span>
-
-                                        <span className="history-value">
-                                            {loan.interest_rate}%
-                                        </span>
-                                    </div>
-
-                                    <div className="history-item">
-                                        <span className="history-label">
-                                            Total Repayment
-                                        </span>
-
+                                        <span className="history-label">Amount</span>
                                         <span className="history-value highlight">
-                                            $
-                                            {Number(
-                                                loan.total_repayment
-                                            ).toFixed(2)}
+                                            ${Number(loan.amount).toLocaleString()}
                                         </span>
                                     </div>
-
-                                    <div className="history-divider"></div>
-
-                                    <div className="history-item full-width">
-
-                                        <span className="history-label">
-                                            Reason
-                                        </span>
-
-                                        <p className="history-text">
-                                            {loan.reason}
-                                        </p>
-
-                                    </div>
-
                                     <div className="history-item">
-
-                                        <span className="history-label">
-                                            Applied Date
-                                        </span>
-
-                                        <span className="history-value">
-                                            {new Date(
-                                                loan.date_applied
-                                            ).toLocaleDateString()}
-                                        </span>
-
+                                        <span className="history-label">Duration</span>
+                                        <span className="history-value">{loan.duration} months</span>
                                     </div>
-
+                                    <div className="history-item">
+                                        <span className="history-label">Interest Rate</span>
+                                        <span className="history-value">{loan.interest_rate}%</span>
+                                    </div>
+                                    <div className="history-divider"></div>
+                                    <div className="history-footer">
+                                        <p className="monthly-payment">
+                                            Total repayment:{" "}
+                                            <strong>
+                                                ${Number(loan.totalRepayment ?? loan.amount).toLocaleString()}
+                                            </strong>
+                                        </p>
+                                    </div>
                                 </div>
-
-                                <div className="history-footer">
-
-                                    <p className="monthly-payment">
-
-                                        Monthly Payment:
-
-                                        <strong>
-                                            {" "}
-                                            $
-                                            {(
-                                                loan.total_repayment /
-                                                loan.duration
-                                            ).toFixed(2)}
-                                        </strong>
-
-                                    </p>
-
-                                </div>
-
                             </div>
-
-                        ))}
-
-                    </div>
-
-                )}
-
-            </div>
-
-            {/* FAQ */}
-            <div className="loan-faq-section">
-
-                <h2 className="section-title">
-                    Frequently Asked Questions
-                </h2>
-
-                <div className="faq-grid">
-
-                    <div className="faq-item">
-                        <h4>❓ Who can apply?</h4>
-
-                        <p>
-                            Active welfare members in
-                            good standing.
-                        </p>
-                    </div>
-
-                    <div className="faq-item">
-                        <h4>💰 Maximum Loan?</h4>
-
-                        <p>
-                            Based on contribution history
-                            and approval committee review.
-                        </p>
-                    </div>
-
-                    <div className="faq-item">
-                        <h4>⏱️ Approval Time?</h4>
-
-                        <p>
-                            Normally between
-                            3–5 working days.
-                        </p>
-                    </div>
-
-                    <div className="faq-item">
-                        <h4>🎯 Early Repayment?</h4>
-
-                        <p>
-                            Yes. No penalties apply for
-                            early settlement.
-                        </p>
-                    </div>
-
+                        ))
+                    )}
                 </div>
-
             </div>
-
-            <div className="loan-cta">
-
-                <h2>Need Assistance?</h2>
-
-                <p>
-                    Contact the welfare committee
-                    for support.
-                </p>
-
-                <button
-                    className="btn btn-primary"
-                    onClick={() => navigate("/member")}
-                >
-                    Contact Committee
-                </button>
-
-            </div>
-
         </div>
     );
 }
+
+export default Loan;
