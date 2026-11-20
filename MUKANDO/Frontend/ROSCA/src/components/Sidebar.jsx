@@ -1,53 +1,123 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 
+import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Users,
+  HandCoins,
+  Wallet,
+  ChartNoAxesCombined,
+  UserRound,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Landmark,
+  LogOut
+} from "lucide-react";
 
-export default function Sidebar() {
-    const location = useLocation();
-    
-    const navItems = [
-        { path: '/home', label: 'Home', icon: '🏠' },
-        { path: '/member', label: 'Members', icon: '👥' },
-        { path: '/balance', label: 'Balance', icon: '💰' },
-        { path: '/report', label: 'Reports', icon: '📊' },
-        { path: '/loan', label: 'Loans', icon: '🔑' },
-    ];
+const sections = [
+  {
+    label: "WORKSPACE",
+    items: [
+      { to: "/admin/home", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/admin/member", label: "Members", icon: Users },
+      { to: "/admin/loan", label: "Loans", icon: HandCoins },
+      { to: "/admin/balance", label: "Fund Balance", icon: Wallet },
+      { to: "/admin/report", label: "Reports", icon: ChartNoAxesCombined }
+    ]
+  },
+  {
+    label: "ACCOUNT",
+    items: [
+      { to: "/admin/profile", label: "My Profile", icon: UserRound },
+      { to: "/admin/settings", label: "Settings", icon: Settings }
+    ]
+  }
+];
 
-    const isActive = (path) => location.pathname === path;
+export default function Sidebar({
+  collapsed,
+  mobileOpen,
+  onToggle,
+  onLogout
+}) {
+  return (
+    <aside className={`ubc-sidebar ${collapsed ? "collapsed" : ""} ${mobileOpen ? "mobile-open" : ""}`}>
+      <div className="ubc-sidebar-brand">
+        <div className="ubc-brand-icon">
+          <Landmark size={23} />
+        </div>
 
-    return (
-        <aside className="sidebar">
-            {/* Sidebar Header */}
-            <div className="sidebar-header">
-                <h3>Menu</h3>
-                <div className="sidebar-divider"></div>
+        {!collapsed && (
+          <div className="ubc-brand-copy">
+            <strong>UBC ROSCA</strong>
+            <small>ADMIN WORKSPACE</small>
+          </div>
+        )}
+
+        <button
+          type="button"
+          className="ubc-collapse-button"
+          onClick={onToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand" : "Collapse"}
+        >
+          {collapsed
+            ? <ChevronRight size={17} />
+            : <ChevronLeft size={17} />}
+        </button>
+      </div>
+
+      <div className="ubc-sidebar-scroll">
+        {sections.map((section) => (
+          <div className="ubc-menu-section" key={section.label}>
+            {!collapsed && (
+              <div className="ubc-menu-heading">
+                {section.label}
+              </div>
+            )}
+
+            {section.items.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={collapsed ? item.label : undefined}
+                  className={({ isActive }) =>
+                    `ubc-menu-link ${isActive ? "selected" : ""}`
+                  }
+                >
+                  <Icon size={19} />
+                  {!collapsed && <span>{item.label}</span>}
+                </NavLink>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <div className="ubc-sidebar-bottom">
+        {!collapsed && (
+          <div className="ubc-sidebar-note">
+            <div className="ubc-note-icon">
+              <Wallet size={18} />
             </div>
+            <strong>Save together.</strong>
+            <small>Grow together.</small>
+          </div>
+        )}
 
-            {/* Navigation Links */}
-            <nav className="sidebar-nav">
-                {navItems.map((item) => (
-                    <Link
-                        key={item.path}
-                        to={item.path}
-                        className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
-                    >
-                        <span className="nav-icon">{item.icon}</span>
-                        <span className="nav-label">{item.label}</span>
-                        {isActive(item.path) && <span className="nav-indicator"></span>}
-                    </Link>
-                ))}
-            </nav>
-
-            {/* Sidebar Footer */}
-            <div className="sidebar-footer">
-                <div className="footer-card">
-                    <p className="footer-title">Fund Health</p>
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: '75%' }}></div>
-                    </div>
-                    <span className="progress-text">75%</span>
-                </div>
-            </div>
-        </aside>
-    );
+        <button
+          type="button"
+          className="ubc-sidebar-logout"
+          onClick={onLogout}
+          title="Sign out"
+        >
+          <LogOut size={19} />
+          {!collapsed && <span>Sign Out</span>}
+        </button>
+      </div>
+    </aside>
+  );
 }

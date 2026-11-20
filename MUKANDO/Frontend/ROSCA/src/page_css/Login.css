@@ -1,0 +1,395 @@
+
+.ubc-auth-page {
+  min-height: 100vh;
+  background: #09090d;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: 35px 20px;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  box-sizing: border-box;
+}
+
+.ubc-auth-page * {
+  box-sizing: border-box;
+}
+
+.ubc-auth-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(65px);
+  pointer-events: none;
+}
+
+.ubc-auth-glow.one {
+  width: 420px;
+  height: 420px;
+  background: rgba(225,25,83,.5);
+  left: -170px;
+  bottom: -140px;
+}
+
+.ubc-auth-glow.two {
+  width: 470px;
+  height: 470px;
+  background: rgba(150,20,78,.42);
+  right: -140px;
+  top: -100px;
+}
+
+.ubc-auth-glow.three {
+  width: 280px;
+  height: 280px;
+  background: rgba(255,70,125,.22);
+  right: 27%;
+  bottom: 0;
+}
+
+.ubc-auth-glass {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1000px;
+  border: 1px solid rgba(255,255,255,.19);
+  border-radius: 25px;
+  background: rgba(255,255,255,.075);
+  box-shadow: 0 30px 90px rgba(0,0,0,.55);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  color: #fff;
+  padding: 36px 43px 43px;
+}
+
+.ubc-auth-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 38px;
+}
+
+.ubc-auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 850;
+  font-size: 18px;
+  letter-spacing: .5px;
+}
+
+.ubc-auth-logo svg {
+  color: #ff6591;
+}
+
+.ubc-auth-security {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #ddd2db;
+  font-size: 11px;
+}
+
+.ubc-auth-grid {
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.ubc-auth-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffa7c0;
+}
+
+.ubc-auth-formside h1 {
+  font-size: clamp(42px, 5vw, 64px);
+  letter-spacing: -2px;
+  line-height: 1.1;
+  color: white;
+  margin: 15px 0 10px;
+}
+
+.ubc-auth-formside h1 span {
+  color: #ff598b;
+}
+
+.ubc-auth-intro {
+  color: #ddd1d9;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.ubc-auth-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 25px;
+  padding: 5px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.09);
+}
+
+.ubc-auth-tabs button {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  color: #c9c0c7;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ubc-auth-tabs button.active {
+  background: #a61e42;
+  color: #fff;
+}
+
+.ubc-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ubc-auth-form > label:not(.ubc-auth-remember) {
+  font-size: 12px;
+  font-weight: 650;
+  color: #eee6eb;
+  margin-top: 7px;
+}
+
+.ubc-auth-form > input,
+.ubc-auth-password input {
+  height: 49px;
+  padding: 0 14px;
+  border: 1px solid rgba(255,255,255,.23);
+  border-radius: 10px;
+  outline: none;
+  background: rgba(10,10,18,.32);
+  color: #fff;
+  font-size: 14px;
+  width: 100%;
+}
+
+.ubc-auth-form input::placeholder {
+  color: #c1b4bd;
+}
+
+.ubc-auth-form input:focus {
+  border-color: #ff739c;
+  box-shadow: 0 0 0 3px rgba(255,85,135,.16);
+}
+
+.ubc-auth-password {
+  position: relative;
+}
+
+.ubc-auth-password input {
+  padding-right: 50px;
+}
+
+.ubc-auth-password button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f5d0dd;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.ubc-auth-remember {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 9px 0;
+  color: white;
+  font-size: 12px;
+}
+
+.ubc-auth-remember input {
+  accent-color: #ef3167;
+  width: 16px;
+  height: 16px;
+}
+
+.ubc-auth-submit {
+  width: 100%;
+  margin-top: 9px;
+  min-height: 49px;
+  background: linear-gradient(110deg, #ed3b71, #98173d);
+  color: #fff;
+  border: 0;
+  border-radius: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(239,59,113,.22);
+}
+
+.ubc-auth-submit:hover {
+  filter: brightness(1.13);
+}
+
+.ubc-auth-submit:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.ubc-auth-error,
+.ubc-auth-success {
+  border-radius: 9px;
+  padding: 12px;
+  font-size: 12px;
+}
+
+.ubc-auth-error {
+  color: #fff;
+  background: rgba(200,35,61,.45);
+}
+
+.ubc-auth-success {
+  color: #fff;
+  background: rgba(25,110,67,.55);
+}
+
+/* SCRIPTURE PANEL */
+
+.ubc-auth-verse {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.ubc-auth-verse-glass {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 22px 50px rgba(0,0,0,.16);
+}
+
+.ubc-auth-quote-mark {
+  color: #ff5e94;
+  font-size: 78px;
+  line-height: .7;
+  font-family: Georgia, serif;
+}
+
+.ubc-auth-verse-glass > span {
+  color: #ffb3cc;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.ubc-auth-verse-glass p {
+  font-size: clamp(19px, 2.3vw, 25px);
+  line-height: 1.55;
+  color: #fff;
+  font-weight: 600;
+  margin: 23px 0;
+}
+
+.ubc-auth-verse-glass strong,
+.ubc-auth-verse-glass small {
+  display: block;
+}
+
+.ubc-auth-verse-glass strong {
+  font-size: 13px;
+}
+
+.ubc-auth-verse-glass small {
+  margin-top: 5px;
+  color: #d4bac6;
+  font-size: 11px;
+}
+
+.ubc-auth-verse-navigation {
+  margin-top: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ubc-auth-verse-navigation > button {
+  padding: 9px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,.15);
+  cursor: pointer;
+}
+
+.ubc-auth-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.ubc-auth-dots button {
+  height: 6px;
+  width: 6px;
+  border-radius: 20px;
+  padding: 0;
+  background: #8d7d87;
+  border: none;
+  cursor: pointer;
+}
+
+.ubc-auth-dots button.active {
+  width: 19px;
+  background: #ff6091;
+}
+
+.ubc-auth-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #e2c7d1;
+}
+
+@media (max-width: 800px) {
+  .ubc-auth-glass {
+    padding: 25px;
+  }
+
+  .ubc-auth-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .ubc-auth-verse {
+    display: none;
+  }
+}
+
+@media (max-width: 450px) {
+  .ubc-auth-page {
+    padding: 14px;
+  }
+
+  .ubc-auth-glass {
+    padding: 22px 18px;
+  }
+
+  .ubc-auth-heading {
+    margin-bottom: 28px;
+  }
+
+  .ubc-auth-security {
+    display: none;
+  }
+}

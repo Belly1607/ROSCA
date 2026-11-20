@@ -1,0 +1,296 @@
+
+/* ==========================================
+   UBC ROSCA — MEMBER REGISTRATION
+========================================== */
+
+.ubc-memberform-page {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 15px 10px 45px;
+  color: var(--ubc-text, #18181b);
+  box-sizing: border-box;
+}
+
+.ubc-memberform-page * {
+  box-sizing: border-box;
+}
+
+/* PAGE HEADING */
+
+.ubc-memberform-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.ubc-memberform-eyebrow {
+  color: #a61e42;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.ubc-memberform-heading h1 {
+  font-size: 29px;
+  font-weight: 800;
+  margin: 9px 0;
+  color: var(--ubc-text, #18181b);
+}
+
+.ubc-memberform-heading p {
+  color: var(--ubc-muted, #71717a);
+  font-size: 14px;
+  margin: 0;
+}
+
+.ubc-memberform-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ubc-text, #18181b);
+  background: var(--ubc-surface, #fff);
+  border: 1px solid var(--ubc-border, #e9e9ee);
+  padding: 12px 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* FORM CARD */
+
+.ubc-memberform-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 35px;
+  background: var(--ubc-surface, #fff);
+  border: 1px solid var(--ubc-border, #e9e9ee);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.035);
+}
+
+.ubc-memberform-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 23px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--ubc-border, #e9e9ee);
+}
+
+.ubc-memberform-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  color: #a61e42;
+  background: #fce7ee;
+  flex-shrink: 0;
+}
+
+.ubc-memberform-card-heading h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: var(--ubc-text, #18181b);
+}
+
+.ubc-memberform-card-heading p {
+  font-size: 13px;
+  color: var(--ubc-muted, #71717a);
+  margin: 0;
+}
+
+/* INPUT FIELDS */
+
+.ubc-memberform-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.ubc-memberform-field label {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  color: var(--ubc-text, #18181b);
+}
+
+.ubc-memberform-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 51px;
+  padding: 0 15px;
+  background: var(--ubc-bg, #f5f5f7);
+  border: 1px solid var(--ubc-border, #e9e9ee);
+  border-radius: 11px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ubc-memberform-input > svg {
+  flex-shrink: 0;
+  color: #a1a1aa;
+}
+
+.ubc-memberform-input:focus-within {
+  border-color: #a61e42;
+  box-shadow: 0 0 0 3px rgba(166, 30, 66, 0.1);
+}
+
+.ubc-memberform-input input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  min-height: 49px;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: var(--ubc-text, #18181b) !important;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 0 !important;
+  text-align: left;
+}
+
+.ubc-memberform-input input::placeholder {
+  color: #9696a0;
+}
+
+.ubc-memberform-eye {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  color: #a61e42;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.ubc-memberform-field small {
+  color: var(--ubc-muted, #71717a);
+  font-size: 12px;
+}
+
+/* ACCOUNT NOTICE */
+
+.ubc-memberform-notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(166, 30, 66, 0.07);
+  border: 1px solid rgba(166, 30, 66, 0.15);
+  border-radius: 11px;
+  padding: 16px;
+  margin: 10px 0 26px;
+}
+
+.ubc-memberform-notice svg {
+  flex-shrink: 0;
+  color: #a61e42;
+}
+
+.ubc-memberform-notice p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ubc-text, #18181b);
+}
+
+/* MESSAGES */
+
+.ubc-memberform-error,
+.ubc-memberform-success {
+  padding: 13px 15px;
+  border-radius: 9px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.ubc-memberform-error {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.ubc-memberform-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* BUTTONS */
+
+.ubc-memberform-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.ubc-memberform-cancel,
+.ubc-memberform-submit {
+  min-height: 46px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.ubc-memberform-cancel {
+  background: transparent;
+  border: 1px solid var(--ubc-border, #e9e9ee);
+  color: var(--ubc-text, #18181b);
+}
+
+.ubc-memberform-submit {
+  background: #a61e42;
+  border: 1px solid #a61e42;
+  color: white;
+}
+
+.ubc-memberform-submit:hover {
+  background: #811631;
+}
+
+.ubc-memberform-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+  .ubc-memberform-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ubc-memberform-heading h1 {
+    font-size: 25px;
+  }
+
+  .ubc-memberform-card {
+    padding: 23px 18px;
+  }
+
+  .ubc-memberform-actions {
+    flex-direction: column-reverse;
+  }
+
+  .ubc-memberform-cancel,
+  .ubc-memberform-submit {
+    width: 100%;
+  }
+}

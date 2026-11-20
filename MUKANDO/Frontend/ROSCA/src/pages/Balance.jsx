@@ -1,200 +1,343 @@
-import React, { useState, useEffect } from 'react';
 
-function Balance() {
-    const [animateCards, setAnimateCards] = useState(false);
-    const [members, setMembers] = useState([]);
-    const [loans, setLoans] = useState([]);
+import { useCallback, useEffect, useState } from "react";
+import {
+  Wallet, Plus, Banknote, Coins, ArrowDownLeft,
+  ArrowUpRight, RefreshCw, X, History, AlertTriangle
+} from "lucide-react";
+import { apiRequest } from "../utils/api";
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [membersRes, loansRes] = await Promise.all([
-                    fetch("http://localhost:5000/members"),
-                    fetch("http://localhost:5000/loans")
-                ]);
-                setMembers(await membersRes.json());
-                setLoans(await loansRes.json());
-            } catch (err) {
-                console.error("Failed to fetch balance data", err);
-            } finally {
-                setAnimateCards(true);
-            }
-        };
+const cash = (v) => Number(v || 0).toLocaleString("en-US", {
+  minimumFractionDigits: 2, maximumFractionDigits: 2
+});
+const date = (v) => v ? String(v).slice(0,10) : "—";
 
-        fetchData();
-    }, []);
+const grid = {
+  display:"grid",
+  gridTemplateColumns:"repeat(auto-fit,minmax(210px,1fr))",
+  gap:16
+};
+const muted = {fontSize:13,color:"var(--ubc-muted)",lineHeight:1.6};
 
-    // Derived financials
-    const activeLoans = loans.filter(l => l.statusapproval !== "repaid");
-    const repaidLoans = loans.filter(l => l.statusapproval === "repaid");
+export default function Balance() {
+  const [dashboard,setDashboard] = useState(null);
+  const [members,setMembers] = useState([]);
+  const [contributions,setContributions] = useState([]);
+  const [cycles,setCycles] = useState([]);
+  const [loans,setLoans] = useState([]);
+  const [modal,setModal] = useState(false);
+  const [memberId,setMemberId] = useState("");
+  const [amount,setAmount] = useState("");
+  const [receiptRef,setReceiptRef] = useState("");
+  const [loading,setLoading] = useState(true);
+  const [busy,setBusy] = useState(false);
+  const [error,setError] = useState("");
+  const [success,setSuccess] = useState("");
 
-    const totalLoaned     = loans.reduce((sum, l) => sum + Number(l.amount), 0);
-    const activeLoansAmt  = activeLoans.reduce((sum, l) => sum + Number(l.amount), 0);
-    const repaidAmt       = repaidLoans.reduce((sum, l) => sum + Number(l.totalRepayment ?? l.amount), 0);
-    const availableFunds  = repaidAmt - activeLoansAmt;
+  const load = useCallback(async () => {
+    try {
+      const [d,m,c,s,l] = await Promise.all([
+        apiRequest("/dashboard"),
+        apiRequest("/members"),
+        apiRequest("/admin/contributions"),
+        apiRequest("/savings-cycles"),
+        apiRequest("/admin/loan-ledger")
+      ]);
+      if (!d || !Array.isArray(m) || !Array.isArray(c) ||
+          !Array.isArray(s) || !Array.isArray(l)) {
+        throw new Error("Invalid financial data returned");
+      }
+      setDashboard(d);
+      setMembers(m);
+      setContributions(c);
+      setCycles(s);
+      setLoans(l);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    const repaymentRate = totalLoaned > 0
-        ? Math.round((repaidAmt / totalLoaned) * 100)
-        : 0;
+  useEffect(() => { load(); }, [load]);
 
-    const metrics = [
-        {
-            id: 1,
-            label: 'Community Pool',
-            value: repaidAmt.toLocaleString(),
-            icon: '🤝',
-            accent: 'primary',
-            description: 'Collective savings for mutual support'
-        },
-        {
-            id: 2,
-            label: 'Active Loans',
-            value: activeLoansAmt.toLocaleString(),
-            icon: '🙏',
-            accent: 'secondary',
-            description: 'Members being helped right now'
-        },
-        {
-            id: 3,
-            label: 'Repayments',
-            value: repaidAmt.toLocaleString(),
-            icon: '✨',
-            accent: 'success',
-            description: 'Strong commitment from community'
-        },
-        {
-            id: 4,
-            label: 'Ready to Help',
-            value: availableFunds > 0 ? availableFunds.toLocaleString() : '0',
-            icon: '❤️',
-            accent: 'primary',
-            description: 'Available for next member in need'
-        }
-    ];
+  const cycle = cycles.find(c => c.status === "active");
+  const sharePrice = Number(cycle?.share_price || 0);
+  const entered = Number(amount);
+  const shares =
+    amount.trim() && entered > 0 &&
+    Number.isFinite(entered) && sharePrice > 0 &&
+    Math.abs(entered / sharePrice - Math.round(entered / sharePrice)) < 1e-8
+      ? Math.round(entered / sharePrice)
+      : null;
 
-    const impact = [
-        { label: 'Families Supported', value: members.length,      icon: '👨‍👩‍👧‍👦' },
-        { label: 'Emergency Relief',   value: activeLoans.length,  icon: '🆘' },
-        { label: 'Repayment Rate',     value: `${repaymentRate}%`, icon: '⭐' }
-    ];
+  const verified = contributions.filter(c => c.status === "verified");
+  const pending = contributions.filter(c => c.status === "pending");
 
-    const liquidityRate = totalLoaned > 0
-        ? Math.min(Math.round((availableFunds / totalLoaned) * 100), 100)
-        : 0;
+  const totalVerified = verified.reduce(
+    (sum,c) => sum + Number(c.amount || 0), 0
+  );
+  const totalShares = verified.reduce(
+    (sum,c) => sum + Number(c.number_of_shares || 0), 0
+  );
+  const owed = loans.reduce(
+    (sum,l) => sum + Number(l.total_owed || 0), 0
+  );
 
-    return (
-        <div className="balance-page">
-            <div className="balance-hero">
-                <div className="hero-accent hero-accent-1"></div>
-                <div className="hero-accent hero-accent-2"></div>
+  function openCash() {
+    setMemberId("");
+    setAmount("");
+    setReceiptRef(crypto.randomUUID());
+    setError("");
+    setModal(true);
+  }
 
-                <div className="hero-content">
-                    <h1 className="hero-title">Community Welfare Fund</h1>
-                    <p className="hero-subtitle">Building stronger neighborhoods through mutual care</p>
-                </div>
+  async function recordCash(event) {
+    event.preventDefault();
+    if (busy) return;
+    if (!memberId || shares === null) {
+      setError("Select a member and enter a valid whole-share cash amount.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    setSuccess("");
+    try {
+      const response = await apiRequest("/admin/cash-contributions",{
+        method:"POST",
+        body:JSON.stringify({
+          user_id:Number(memberId),
+          amount,
+          receipt_reference:receiptRef
+        })
+      });
+      await load();
+      setModal(false);
+      setSuccess(response.message);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
-                <div className="hero-stats">
-                    <div className="hero-stat">
-                        <span className="hero-value">{members.length}</span>
-                        <span className="hero-label">Members</span>
-                    </div>
-                    <div className="hero-stat-divider"></div>
-                    <div className="hero-stat">
-                        <span className="hero-value">${(totalLoaned / 1000).toFixed(1)}K</span>
-                        <span className="hero-label">Total Circulation</span>
-                    </div>
-                    <div className="hero-stat-divider"></div>
-                    <div className="hero-stat">
-                        <span className="hero-value">{activeLoans.length}</span>
-                        <span className="hero-label">Active Loans</span>
-                    </div>
-                </div>
-            </div>
+  const cards = [
+    {label:"Verified Contributions",value:totalVerified,icon:Coins},
+    {label:"Cash Disbursed",value:dashboard?.totalIssued,icon:ArrowUpRight},
+    {label:"Loan Repayments Received",
+      value:Number(dashboard?.principalRepaid || 0) +
+      Number(dashboard?.interestEarned || 0),icon:ArrowDownLeft},
+    {label:"Outstanding Loans",value:owed,icon:Wallet}
+  ];
 
-            <div className="metrics-section">
-                <h2 className="section-title">Financial Health</h2>
-                <div className={`metrics-grid ${animateCards ? 'loaded' : ''}`}>
-                    {metrics.map((metric) => (
-                        <div
-                            key={metric.id}
-                            className={`metric-card accent-${metric.accent}`}
-                            style={{ animationDelay: `${metric.id * 80}ms` }}
-                        >
-                            <div className="metric-icon">{metric.icon}</div>
-                            <h3 className="metric-label">{metric.label}</h3>
-                            <div className="metric-value">
-                                <span className="currency">$</span>{metric.value}
-                            </div>
-                            <p className="metric-description">{metric.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="impact-section">
-                <h2 className="section-title">Community Impact</h2>
-                <p className="section-subtitle">Lives touched, needs met, hope restored</p>
-                <div className="impact-grid">
-                    {impact.map((item, idx) => (
-                        <div key={idx} className="impact-card">
-                            <div className="impact-icon">{item.icon}</div>
-                            <div className="impact-stat">
-                                <span className="impact-value">{item.value}</span>
-                                <span className="impact-label">{item.label}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="health-section">
-                <div className="health-card">
-                    <div className="health-header">
-                        <h3>Fund Stability</h3>
-                        <span className="health-badge">
-                            {repaymentRate >= 80 ? 'Excellent' : repaymentRate >= 50 ? 'Good' : 'Needs Attention'}
-                        </span>
-                    </div>
-                    <div className="health-metrics">
-                        <div className="health-item">
-                            <span className="health-label">Liquidity</span>
-                            <div className="health-bar">
-                                <div className="health-fill" style={{ width: `${liquidityRate}%` }}></div>
-                            </div>
-                            <span className="health-value">{liquidityRate}%</span>
-                        </div>
-                        <div className="health-item">
-                            <span className="health-label">Repayment Rate</span>
-                            <div className="health-bar">
-                                <div className="health-fill" style={{ width: `${repaymentRate}%` }}></div>
-                            </div>
-                            <span className="health-value">{repaymentRate}%</span>
-                        </div>
-                        <div className="health-item">
-                            <span className="health-label">Active Borrowers</span>
-                            <div className="health-bar">
-                                <div className="health-fill" style={{ width: `${members.length > 0 ? Math.round((activeLoans.length / members.length) * 100) : 0}%` }}></div>
-                            </div>
-                            <span className="health-value">
-                                {members.length > 0 ? Math.round((activeLoans.length / members.length) * 100) : 0}%
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="cta-section">
-                <div className="cta-content">
-                    <h2>Ready to Make a Difference?</h2>
-                    <p>Join our community welfare initiative. Together, we care for those in need.</p>
-                </div>
-                <div className="cta-buttons">
-                    <button className="btn btn-primary">💝 Contribute to Fund</button>
-                    <button className="btn btn-secondary">👥 View Members</button>
-                </div>
-            </div>
+  return (
+    <div className="ubc-page">
+      <div className="ubc-page-heading">
+        <div>
+          <h1>Fund Balance</h1>
+          <p>Track cash share contributions and lending activity.</p>
         </div>
-    );
-}
+        <div style={{display:"flex",gap:9,flexWrap:"wrap"}}>
+          <button className="ubc-button-secondary" onClick={load}>
+            <RefreshCw size={16}/> Refresh
+          </button>
+          <button className="ubc-button-primary" onClick={openCash}>
+            <Plus size={17}/> Record Cash Contribution
+          </button>
+        </div>
+      </div>
 
-export default Balance;
+      {error && <div className="ubc-alert error" role="alert">{error}</div>}
+      {success && <div className="ubc-alert success">{success}</div>}
+
+      {loading ? (
+        <section className="ubc-panel">Loading fund records...</section>
+      ) : dashboard && (
+        <>
+          <div style={{
+            background:"linear-gradient(125deg,#17171c,#501a30)",
+            borderRadius:20,color:"white",padding:"28px 30px",margin:"20px 0"
+          }}>
+            <div style={{fontSize:12,letterSpacing:1.2,color:"#edced8"}}>
+              ESTIMATED AVAILABLE FUNDS
+            </div>
+            <div style={{
+              fontSize:"clamp(30px,5vw,46px)",fontWeight:800,
+              margin:"12px 0",fontVariantNumeric:"tabular-nums"
+            }}>
+              {cash(dashboard.availableFunds)}
+            </div>
+            <p style={{color:"#eedce2",fontSize:13,margin:0}}>
+              Calculated from recorded transactions. Not yet reconciled
+              against physical cash in hand.
+            </p>
+          </div>
+
+          <div className="ubc-cards" style={grid}>
+            {cards.map(({label,value,icon:Icon}) => (
+              <div className="ubc-card" key={label}>
+                <div className="ubc-card-top">
+                  <span>{label}</span>
+                  <span className="ubc-card-icon"><Icon size={19}/></span>
+                </div>
+                <strong>{cash(value)}</strong>
+              </div>
+            ))}
+          </div>
+
+          <div style={{...grid,gridTemplateColumns:
+            "repeat(auto-fit,minmax(300px,1fr))",marginTop:22}}>
+            <section className="ubc-panel">
+              <div className="ubc-panel-title">
+                <h2>Cash Contributions</h2>
+                <Coins size={19}/>
+              </div>
+              {[
+                ["Verified Cash",cash(totalVerified)],
+                ["Verified Shares",totalShares.toLocaleString()],
+                ["Pending Contributions",pending.length],
+                ["Current Savings Cycle",cycle?.cycle_year || "None"],
+                ["Current Share Price",cash(sharePrice)]
+              ].map(([label,value]) => (
+                <div key={label} style={{
+                  display:"flex",justifyContent:"space-between",
+                  gap:12,padding:"14px 0",
+                  borderBottom:"1px solid var(--ubc-border,#e8e8ee)"
+                }}>
+                  <span style={muted}>{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </section>
+
+            <section className="ubc-panel">
+              <div className="ubc-panel-title">
+                <h2>Fund Breakdown</h2>
+                <Banknote size={19}/>
+              </div>
+              {[
+                ["Verified Contributions",dashboard.totalContributions],
+                ["Principal Repaid",dashboard.principalRepaid],
+                ["Interest Received",dashboard.interestEarned],
+                ["Loans Disbursed",dashboard.totalIssued],
+                ["Verified Expenses",dashboard.totalExpenses]
+              ].map(([label,value]) => (
+                <div key={label} style={{
+                  display:"flex",justifyContent:"space-between",
+                  padding:"14px 0",gap:12,
+                  borderBottom:"1px solid var(--ubc-border,#e8e8ee)"
+                }}>
+                  <span style={muted}>{label}</span>
+                  <strong>{cash(value)}</strong>
+                </div>
+              ))}
+              <p style={{...muted,marginTop:16}}>
+                The backend also deducts recorded distribution payments
+                from its available-funds estimate.
+              </p>
+            </section>
+          </div>
+
+          <section className="ubc-panel" style={{marginTop:22}}>
+            <div className="ubc-panel-title">
+              <h2>Cash Contribution History</h2>
+              <span>{contributions.length} records</span>
+            </div>
+            <div className="ubc-table-wrap">
+              <table className="ubc-table">
+                <thead>
+                  <tr>
+                    <th>Date</th><th>Member</th><th>Cash Received</th>
+                    <th>Shares</th><th>Cycle</th><th>Status</th><th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contributions.length === 0 ? (
+                    <tr><td colSpan="7">No contributions recorded yet.</td></tr>
+                  ) : contributions.map((c) => (
+                    <tr key={c.contribution_id}>
+                      <td>{date(c.payment_date)}</td>
+                      <td><strong>{c.full_name}</strong></td>
+                      <td>{cash(c.amount)}</td>
+                      <td>{c.number_of_shares}</td>
+                      <td>{c.cycle_year}</td>
+                      <td><span className={`ubc-status ${c.status}`}>{c.status}</span></td>
+                      <td style={{fontSize:12}}>{c.payment_reference || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {pending.length > 0 && (
+              <p style={{...muted,display:"flex",gap:8,marginTop:18}}>
+                <AlertTriangle size={16}/>
+                Pending member-submitted contributions do not count
+                toward verified fund totals.
+              </p>
+            )}
+          </section>
+        </>
+      )}
+
+      {modal && (
+        <div className="ubc-modal-backdrop">
+          <div className="ubc-modal" role="dialog" aria-modal="true">
+            <div className="ubc-panel-title">
+              <h2>Record Cash Contribution</h2>
+              <button className="ubc-button-secondary" type="button"
+                disabled={busy} onClick={() => setModal(false)}>
+                <X size={17}/>
+              </button>
+            </div>
+
+            <p>Choose the member who physically handed in the cash.</p>
+            <form onSubmit={recordCash}>
+              <div className="ubc-field">
+                <label htmlFor="cash-member">Member</label>
+                <select id="cash-member" value={memberId}
+                  onChange={e => setMemberId(e.target.value)} required>
+                  <option value="">Select member</option>
+                  {members.filter(m => m.status === "active").map(m => (
+                    <option value={m.user_id} key={m.user_id}>
+                      {m.full_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="ubc-field">
+                <label htmlFor="cash-amount">Cash Received</label>
+                <input id="cash-amount" type="number" min="0.01" step="0.01"
+                  value={amount} onChange={e => setAmount(e.target.value)}
+                  placeholder="Enter actual amount received" required/>
+              </div>
+
+              <div className="ubc-card" style={{margin:"18px 0"}}>
+                <small>Savings Cycle</small>
+                <strong>{cycle?.cycle_year || "No active cycle"}</strong>
+                <small>Share Price: {cash(sharePrice)}</small>
+                <small>Shares Calculated</small>
+                <strong>{shares ?? "—"}</strong>
+              </div>
+
+              <p style={muted}>
+                Cash entries are immediately verified. Only confirm
+                after counting the money and confirming the member.
+              </p>
+
+              <div className="ubc-modal-actions">
+                <button type="button" className="ubc-button-secondary"
+                  disabled={busy} onClick={() => setModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="ubc-button-primary"
+                  disabled={busy || !cycle || shares === null}>
+                  {busy ? "Recording..." : "Confirm Cash Received"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

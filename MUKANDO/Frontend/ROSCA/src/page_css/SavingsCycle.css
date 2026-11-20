@@ -1,0 +1,224 @@
+
+.ubc-cycle-panel,
+.ubc-cycle-account {
+  margin-bottom: 22px;
+}
+
+.ubc-cycle-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ubc-cycle-title h2,
+.ubc-cycle-account h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ubc-cycle-title p {
+  margin: 7px 0 0;
+  color: var(--ubc-muted, #777);
+  font-size: 14px;
+}
+
+.ubc-cycle-title button,
+.ubc-cycle-actions button,
+.ubc-cycle-password-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.ubc-cycle-highlight {
+  padding: 26px;
+  border-radius: 16px;
+  margin: 20px 0 24px;
+  background: linear-gradient(115deg, #19191d, #35202a);
+  color: white;
+}
+
+.ubc-cycle-eyebrow {
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  color: #dfbfc9;
+  font-weight: 700;
+}
+
+.ubc-cycle-big-year {
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 1.15;
+  margin: 12px 0;
+}
+
+.ubc-cycle-highlight p {
+  color: #e2d4d9;
+  margin: 0 0 12px;
+}
+
+.ubc-cycle-price {
+  font-size: 14px;
+  margin-bottom: 13px;
+}
+
+.ubc-cycle-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: capitalize;
+  background: rgba(140, 140, 140, 0.13);
+  color: var(--ubc-text, #222);
+}
+
+.ubc-cycle-status.active {
+  background: #d9f8e6;
+  color: #136c3b;
+}
+
+.ubc-cycle-status.planned {
+  background: #fff2cf;
+  color: #8a5b05;
+}
+
+.ubc-cycle-status.closed {
+  background: #ececf1;
+  color: #5c5e69;
+}
+
+.ubc-cycle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ubc-cycle-actions button {
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.ubc-cycle-table-wrap {
+  overflow-x: auto;
+}
+
+.ubc-cycle-table-wrap .ubc-table {
+  width: 100%;
+  min-width: 690px;
+}
+
+.ubc-cycle-note {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  color: var(--ubc-muted, #777);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.ubc-cycle-refresh,
+.ubc-cycle-visibility {
+  border: 0;
+  background: transparent;
+  color: var(--ubc-muted, #777);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 13px;
+}
+
+.ubc-cycle-password-form {
+  max-width: 540px;
+  display: grid;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.ubc-cycle-password-form .ubc-field,
+.ubc-cycle-modal-form .ubc-field {
+  display: grid;
+  gap: 7px;
+}
+
+.ubc-cycle-password-form .ubc-field input,
+.ubc-cycle-modal-form .ubc-field input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--ubc-border, #ddd);
+  background: var(--ubc-panel, #fff);
+  color: var(--ubc-text, #222);
+  border-radius: 11px;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.ubc-cycle-password-form label,
+.ubc-cycle-modal-form label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.ubc-cycle-modal-form {
+  display: grid;
+  gap: 16px;
+}
+
+.ubc-cycle-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ubc-cycle-preference {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 18px 0 0;
+}
+
+.ubc-cycle-preference span {
+  display: grid;
+  gap: 5px;
+}
+
+.ubc-cycle-preference small,
+.ubc-cycle-muted {
+  color: var(--ubc-muted, #777);
+  font-size: 12px;
+}
+
+.ubc-cycle-preference input {
+  accent-color: #a61e42;
+  width: 19px;
+  height: 19px;
+}
+
+.ubc-cycle-account {
+  padding-bottom: 24px;
+}
+
+@media (max-width: 650px) {
+  .ubc-cycle-title {
+    flex-wrap: wrap;
+  }
+
+  .ubc-cycle-dates {
+    grid-template-columns: 1fr;
+  }
+
+  .ubc-cycle-highlight {
+    padding: 20px;
+  }
+}
