@@ -9,6 +9,7 @@
     padding: 10px;
 }
 
+
 .member-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

@@ -1,7 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import {
-  Bell,
+  House,
   Moon,
   Sun,
   UserRound,
@@ -9,32 +9,62 @@ import {
   Menu
 } from "lucide-react";
 
+import "../page_css/Navbar.css";
+
 export default function NavBar({
   user,
-  theme,
+  theme = "light",
   onThemeChange,
   onLogout,
   onMenuToggle
 }) {
   const location = useLocation();
+
   const isAdmin = user?.role === "admin";
+
   const base = isAdmin ? "/admin" : "/member";
+  const homePath = `${base}/home`;
 
   const labels = {
     home: "Overview",
     member: "Member Management",
+    memberform: "Add Member",
     loan: "Loan Management",
     balance: "Fund Balance",
     report: "Reports",
+    savingscycle: "Savings Cycles",
     profile: "My Profile",
     settings: "Settings"
   };
 
-  const section = location.pathname.split("/")[2] || "home";
-  const pageTitle = labels[section] || "UBC ROSCA";
+  const memberLabels = {
+    home: "My Dashboard",
+    profile: "My Profile",
+    settings: "Settings"
+  };
+
+  const section =
+    location.pathname.split("/")[2] || "home";
+
+  const pageTitle = isAdmin
+    ? labels[section] || "UBC ROSCA"
+    : memberLabels[section] || "UBC ROSCA";
+
+  const displayName =
+    user?.name ||
+    user?.full_name ||
+    "User";
+
+  const initial = displayName
+    .charAt(0)
+    .toUpperCase();
+
+  const isDark = theme === "dark";
 
   return (
     <header className="ubc-topbar">
+      {/* LEFT SIDE */}
+
       <div className="ubc-topbar-left">
         {isAdmin && (
           <button
@@ -42,68 +72,104 @@ export default function NavBar({
             className="ubc-mobile-menu"
             onClick={onMenuToggle}
             aria-label="Toggle sidebar"
+            title="Open menu"
           >
-            <Menu size={21} />
+            <Menu size={22} />
           </button>
         )}
 
-        <div>
+        <div className="ubc-topbar-heading">
           <h2>{pageTitle}</h2>
-          <p>UBC ROSCA / {pageTitle}</p>
+
+          <p>
+            UBC ROSCA / {pageTitle}
+          </p>
         </div>
       </div>
 
+      {/* RIGHT SIDE */}
+
       <div className="ubc-topbar-actions">
-        {isAdmin && (
-          <button
-            type="button"
-            className="ubc-icon-button"
-            onClick={onThemeChange}
-            aria-label="Toggle light and dark mode"
-            title="Change theme"
-          >
-            {theme === "dark"
-              ? <Sun size={19} />
-              : <Moon size={19} />}
-          </button>
-        )}
+
+        {/* HOME - ADMIN AND MEMBER */}
 
         <Link
-          to={`${base}/home`}
-          className="ubc-icon-button"
-          title="Dashboard"
-          aria-label="Dashboard"
+          to={homePath}
+          className={`ubc-icon-button ${
+            location.pathname === homePath
+              ? "ubc-icon-active"
+              : ""
+          }`}
+          aria-label="Go to dashboard"
+          title="Home"
         >
-          <Bell size={19} />
+          <House size={21} />
         </Link>
+
+        {/* LIGHT / DARK MODE - BOTH ROLES */}
+
+        <button
+          type="button"
+          className="ubc-icon-button ubc-theme-nav"
+          onClick={onThemeChange}
+          aria-label={
+            isDark
+              ? "Switch to light mode"
+              : "Switch to dark mode"
+          }
+          aria-pressed={isDark}
+          title={
+            isDark
+              ? "Light Mode"
+              : "Dark Mode"
+          }
+        >
+          {isDark ? (
+            <Sun size={21} />
+          ) : (
+            <Moon size={21} />
+          )}
+        </button>
+
+        {/* USER PROFILE */}
 
         <Link
           to={`${base}/profile`}
           className="ubc-user-chip"
+          title="My Profile"
         >
           <span className="ubc-user-avatar">
-            {(user?.name || "U").charAt(0).toUpperCase()}
+            {initial}
           </span>
 
           <span className="ubc-user-details">
-            <strong>{user?.name || "User"}</strong>
+            <strong>{displayName}</strong>
+
             <small>
-              {isAdmin ? "Administrator" : "Member"}
+              {isAdmin
+                ? "Administrator"
+                : "Member"}
             </small>
           </span>
 
-          <UserRound size={16} />
+          <UserRound
+            size={17}
+            className="ubc-user-profile-icon"
+          />
         </Link>
+
+        {/* LOGOUT */}
 
         <button
           type="button"
-          className="ubc-icon-button"
+          className="ubc-icon-button ubc-logout-button"
           onClick={onLogout}
-          title="Sign out"
           aria-label="Sign out"
+          title="Sign out"
         >
-          <LogOut size={18} />
+          <LogOut size={20} />
         </button>
+
       </div>
     </header>
   );

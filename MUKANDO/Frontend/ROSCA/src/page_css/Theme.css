@@ -1,0 +1,209 @@
+
+/* ============================================
+   FINAL DARK MODE FIX
+   RED • BLACK • WHITE
+   ============================================ */
+
+/* Light Mode */
+:root[data-ubc-theme="light"] {
+  --theme-bg: #ffffff;
+  --theme-surface: #ffffff;
+  --theme-surface-alt: #f5f5f5;
+  --theme-text: #111111;
+  --theme-muted: #606060;
+  --theme-border: #e5e5e5;
+  --theme-primary: #d71920;
+  --theme-primary-hover: #ad1018;
+}
+
+/* Dark Mode */
+:root[data-ubc-theme="dark"] {
+  --theme-bg: #080808;
+  --theme-surface: #181818;
+  --theme-surface-alt: #242424;
+  --theme-text: #ffffff;
+  --theme-muted: #bbbbbb;
+  --theme-border: #383838;
+  --theme-primary: #e02020;
+  --theme-primary-hover: #ff3030;
+}
+
+/* Entire application */
+:root[data-ubc-theme] body,
+:root[data-ubc-theme] #root,
+:root[data-ubc-theme] .ubc-member-shell,
+:root[data-ubc-theme] .ubc-member-main,
+:root[data-ubc-theme] .ubc-shell,
+:root[data-ubc-theme] .ubc-workspace,
+:root[data-ubc-theme] .ubc-main {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+/* Member headings */
+:root[data-ubc-theme] .mp-page,
+:root[data-ubc-theme] .mp-welcome h1,
+:root[data-ubc-theme] .mp-section-heading h2,
+:root[data-ubc-theme] .mp-subheading {
+  color: var(--theme-text);
+}
+
+/* Member summary cards and containers */
+:root[data-ubc-theme] .mp-summary-card,
+:root[data-ubc-theme] .mp-workspace,
+:root[data-ubc-theme] .mp-loan-card,
+:root[data-ubc-theme] .mp-secondary-action,
+:root[data-ubc-theme] .mp-modal {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+/* Member financial figures */
+:root[data-ubc-theme] .mp-big-number,
+:root[data-ubc-theme] .mp-loan-values strong,
+:root[data-ubc-theme] .mp-record-main strong {
+  color: var(--theme-text);
+}
+
+/* Member secondary text */
+:root[data-ubc-theme] .mp-welcome p,
+:root[data-ubc-theme] .mp-summary-heading,
+:root[data-ubc-theme] .mp-summary-bottom,
+:root[data-ubc-theme] .mp-section-heading p,
+:root[data-ubc-theme] .mp-record-main small,
+:root[data-ubc-theme] .mp-help {
+  color: var(--theme-muted);
+}
+
+/* Red Apply for Loan button */
+:root[data-ubc-theme] .mp-main-action,
+:root[data-ubc-theme] .mp-submit {
+  background: var(--theme-primary);
+  color: #ffffff;
+  border-color: var(--theme-primary);
+}
+
+/* Tabs */
+:root[data-ubc-theme] .mp-tabs {
+  background: var(--theme-surface-alt);
+  border-color: var(--theme-border);
+}
+
+:root[data-ubc-theme] .mp-tabs button {
+  color: var(--theme-muted);
+}
+
+:root[data-ubc-theme] .mp-tabs button.active {
+  background: var(--theme-surface);
+  color: var(--theme-primary);
+  border-bottom-color: var(--theme-primary);
+}
+
+/* Savings cards */
+:root[data-ubc-theme] .mp-savings-details > div {
+  background: var(--theme-surface-alt);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+:root[data-ubc-theme] .mp-savings-details strong {
+  color: var(--theme-text);
+}
+
+/* Secondary action */
+:root[data-ubc-theme] .mp-secondary-action .mp-action-icon,
+:root[data-ubc-theme] .mp-record-icon {
+  background: var(--theme-surface-alt);
+  color: var(--theme-primary);
+}
+
+/* Navbar */
+:root[data-ubc-theme="light"] .ubc-topbar {
+  --nav-bg: #ffffff;
+  --nav-text: #111111;
+  --nav-muted: #666666;
+  --nav-border: #e5e5e5;
+  --nav-hover: #f5f5f5;
+  --nav-red: #d71920;
+}
+
+:root[data-ubc-theme="dark"] .ubc-topbar {
+  --nav-bg: #101010;
+  --nav-text: #ffffff;
+  --nav-muted: #bbbbbb;
+  --nav-border: #383838;
+  --nav-hover: #242424;
+  --nav-red: #ff3434;
+}
+
+/* Navbar contents */
+:root[data-ubc-theme] .ubc-topbar {
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  border-bottom-color: var(--nav-border);
+}
+
+:root[data-ubc-theme] .ubc-topbar-heading h2,
+:root[data-ubc-theme] .ubc-user-details strong {
+  color: var(--nav-text);
+}
+
+:root[data-ubc-theme] .ubc-topbar-heading p,
+:root[data-ubc-theme] .ubc-user-details small {
+  color: var(--nav-muted);
+}
+
+:root[data-ubc-theme] .ubc-icon-button {
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  border-color: var(--nav-border);
+}
+
+:root[data-ubc-theme] .ubc-icon-button:hover {
+  background: var(--nav-hover);
+  color: var(--nav-red);
+}
+
+:root[data-ubc-theme] .ubc-user-avatar {
+  background: var(--nav-red);
+  color: #ffffff;
+}
+
+/* Bible verse */
+:root[data-ubc-theme="dark"] .mp-verse {
+  background: #181818;
+  border-color: #383838;
+}
+
+:root[data-ubc-theme="dark"] .mp-verse blockquote {
+  color: #ffffff;
+}
+
+:root[data-ubc-theme="dark"] .mp-verse-credit span {
+  color: #bbbbbb;
+}
+/* UBC ROSCA — DEEP RUBY RED */
+
+:root[data-ubc-theme="light"] {
+  --theme-primary: #a51c30;
+  --theme-primary-hover: #871525;
+  --theme-accent: #a51c30;
+}
+
+:root[data-ubc-theme="dark"] {
+  --theme-primary: #b72a3c;
+  --theme-primary-hover: #cc3548;
+  --theme-accent: #b72a3c;
+}
+
+/* Apply the selected red throughout the member portal */
+:root[data-ubc-theme] .mp-page {
+  --mp-red: var(--theme-primary);
+  --mp-red-dark: var(--theme-primary-hover);
+}
+
+/* Apply the same color to the navbar */
+:root[data-ubc-theme] .ubc-topbar {
+  --nav-red: var(--theme-primary);
+}

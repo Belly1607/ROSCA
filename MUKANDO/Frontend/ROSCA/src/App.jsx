@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+
 import {
   BrowserRouter,
   Routes,
@@ -32,6 +33,17 @@ import "./page_css/Loan.css";
 import "./page_css/Balance.css";
 import "./page_css/Report.css";
 import "./page_css/Account.css";
+import "./page_css/Theme.css";
+
+// ============================================
+// THEME SETTINGS
+// ============================================
+
+const THEME_KEY = "ubc-rosca-theme";
+
+// ============================================
+// PROTECTED ROUTES
+// ============================================
 
 function ProtectedRoute({ user, requiredRole }) {
   if (!user) {
@@ -54,26 +66,27 @@ function ProtectedRoute({ user, requiredRole }) {
   return <Outlet />;
 }
 
-function AdminLayout({ user, onLogout }) {
+// ============================================
+// ADMIN LAYOUT
+// ============================================
+
+function AdminLayout({
+  user,
+  theme,
+  onThemeChange,
+  onLogout
+}) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("ubc_theme") || "light"
-  );
-
-  function toggleTheme() {
-    const next = theme === "light" ? "dark" : "light";
-    localStorage.setItem("ubc_theme", next);
-    setTheme(next);
-  }
 
   return (
     <div className={`ubc-shell theme-${theme}`}>
       <Sidebar
         collapsed={collapsed}
         mobileOpen={mobileOpen}
-        onToggle={() => setCollapsed(s => !s)}
+        onToggle={() =>
+          setCollapsed((previous) => !previous)
+        }
         onLogout={onLogout}
       />
 
@@ -81,9 +94,11 @@ function AdminLayout({ user, onLogout }) {
         <NavBar
           user={user}
           theme={theme}
-          onThemeChange={toggleTheme}
+          onThemeChange={onThemeChange}
           onLogout={onLogout}
-          onMenuToggle={() => setMobileOpen(s => !s)}
+          onMenuToggle={() =>
+            setMobileOpen((previous) => !previous)
+          }
         />
 
         <main className="ubc-main">
@@ -94,38 +109,87 @@ function AdminLayout({ user, onLogout }) {
   );
 }
 
-function MemberLayout({ user, onLogout }) {
+// ============================================
+// MEMBER LAYOUT
+// ============================================
+
+function MemberLayout({
+  user,
+  theme,
+  onThemeChange,
+  onLogout
+}) {
   return (
-    <div className="ubc-member-shell">
+    <div className={`ubc-member-shell theme-${theme}`}>
       <NavBar
         user={user}
-        theme="light"
-        onThemeChange={() => {}}
+        theme={theme}
+        onThemeChange={onThemeChange}
         onLogout={onLogout}
       />
 
-      <main style={{
-        maxWidth: 1200,
-        margin: "0 auto",
-        padding: "24px 16px"
-      }}>
+      <main className="ubc-member-main">
         <Outlet />
       </main>
     </div>
   );
 }
 
+// ============================================
+// MAIN APPLICATION
+// ============================================
+
 function AppContent() {
   const navigate = useNavigate();
 
-  const [token, setToken] = useState(
-    () =>
-      sessionStorage.getItem("rosca_token") ||
-      localStorage.getItem("rosca_token")
+  // ============================================
+  // SHARED LIGHT / DARK THEME
+  // ============================================
+
+  const [theme, setTheme] = useState(() => {
+    const savedTheme =
+      localStorage.getItem(THEME_KEY) ||
+      localStorage.getItem("ubc_theme");
+
+    return savedTheme === "dark" ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-ubc-theme",
+      theme
+    );
+
+    document.documentElement.style.colorScheme = theme;
+
+    localStorage.setItem(THEME_KEY, theme);
+
+    // Keep compatibility with any older code
+    // still reading the previous theme key.
+    localStorage.setItem("ubc_theme", theme);
+  }, [theme]);
+
+  function handleThemeChange() {
+    setTheme((previous) =>
+      previous === "light" ? "dark" : "light"
+    );
+  }
+
+  // ============================================
+  // AUTHENTICATION STATE
+  // ============================================
+
+  const [token, setToken] = useState(() =>
+    sessionStorage.getItem("rosca_token") ||
+    localStorage.getItem("rosca_token")
   );
 
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
+
+  // ============================================
+  // RESTORE LOGGED-IN USER
+  // ============================================
 
   useEffect(() => {
     let cancelled = false;
@@ -154,19 +218,33 @@ function AppContent() {
         if (!cancelled) {
           localStorage.removeItem("rosca_token");
           sessionStorage.removeItem("rosca_token");
+
           setToken(null);
           setUser(null);
         }
       } finally {
-        if (!cancelled) setChecking(false);
+        if (!cancelled) {
+          setChecking(false);
+        }
       }
     }
 
     restore();
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
-  function handleLogin(newToken, newUser, rememberMe = false) {
+  // ============================================
+  // LOGIN
+  // ============================================
+
+  function handleLogin(
+    newToken,
+    newUser,
+    rememberMe = false
+  ) {
     localStorage.removeItem("rosca_token");
     sessionStorage.removeItem("rosca_token");
 
@@ -180,27 +258,35 @@ function AppContent() {
     setUser(newUser);
   }
 
+  // ============================================
+  // LOGOUT
+  // ============================================
+
   function handleLogout() {
     localStorage.removeItem("rosca_token");
     sessionStorage.removeItem("rosca_token");
+
     setToken(null);
     setUser(null);
+
     navigate("/login", { replace: true });
   }
 
+  // ============================================
+  // LOADING SCREEN
+  // ============================================
+
   if (checking) {
     return (
-      <div style={{
-        background: "#111115",
-        color: "#fff",
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center"
-      }}>
+      <div className="ubc-loading-screen">
         Loading UBC ROSCA...
       </div>
     );
   }
+
+  // ============================================
+  // DEFAULT HOME
+  // ============================================
 
   const home = !user
     ? "/login"
@@ -208,8 +294,14 @@ function AppContent() {
       ? "/admin/home"
       : "/member/home";
 
+  // ============================================
+  // ROUTES
+  // ============================================
+
   return (
     <Routes>
+      {/* LOGIN */}
+
       <Route
         path="/login"
         element={
@@ -219,64 +311,143 @@ function AppContent() {
         }
       />
 
-      <Route path="/" element={<Navigate to={home} replace />} />
+      <Route
+        path="/"
+        element={<Navigate to={home} replace />}
+      />
+
+      {/* ADMIN ROUTES */}
 
       <Route
         element={
-          <ProtectedRoute user={user} requiredRole="admin" />
+          <ProtectedRoute
+            user={user}
+            requiredRole="admin"
+          />
         }
       >
         <Route
           path="/admin"
           element={
-            <AdminLayout user={user} onLogout={handleLogout} />
+            <AdminLayout
+              user={user}
+              theme={theme}
+              onThemeChange={handleThemeChange}
+              onLogout={handleLogout}
+            />
           }
         >
-          <Route index element={<Navigate to="home" replace />} />
+          <Route
+            index
+            element={<Navigate to="home" replace />}
+          />
+
           <Route path="home" element={<Home />} />
-          <Route path="member" element={<Member />} />
-          <Route path="memberform" element={<MemberForm />} />
+
+          <Route
+            path="member"
+            element={<Member />}
+          />
+
+          <Route
+            path="memberform"
+            element={<MemberForm />}
+          />
+
           <Route path="loan" element={<Loan />} />
-          <Route path="balance" element={<Balance />} />
-          <Route path="report" element={<Report />} />
-          <Route path="profile" element={<Profile />} />
+
+          <Route
+            path="balance"
+            element={<Balance />}
+          />
+
+          <Route
+            path="report"
+            element={<Report />}
+          />
+
+          <Route
+            path="profile"
+            element={<Profile />}
+          />
+
           <Route
             path="settings"
-            element={<Settings onLogout={handleLogout} />}
+            element={
+              <Settings onLogout={handleLogout} />
+            }
           />
-          <Route path="*" element={<Navigate to="home" replace />} />
+
+          <Route
+            path="*"
+            element={<Navigate to="home" replace />}
+          />
         </Route>
       </Route>
 
+      {/* MEMBER ROUTES */}
+
       <Route
         element={
-          <ProtectedRoute user={user} requiredRole="member" />
+          <ProtectedRoute
+            user={user}
+            requiredRole="member"
+          />
         }
       >
         <Route
           path="/member"
           element={
-            <MemberLayout user={user} onLogout={handleLogout} />
+            <MemberLayout
+              user={user}
+              theme={theme}
+              onThemeChange={handleThemeChange}
+              onLogout={handleLogout}
+            />
           }
         >
-          <Route index element={<Navigate to="home" replace />} />
+          <Route
+            index
+            element={<Navigate to="home" replace />}
+          />
+
           <Route
             path="home"
             element={<MemberHome user={user} />}
           />
-          <Route path="profile" element={<Profile />} />
+
+          <Route
+            path="profile"
+            element={<Profile />}
+          />
+
           <Route
             path="settings"
-            element={<Settings onLogout={handleLogout} />}
+            element={
+              <Settings onLogout={handleLogout} />
+            }
           />
-          <Route path="*" element={<Navigate to="home" replace />} />
+
+          <Route
+            path="*"
+            element={<Navigate to="home" replace />}
+          />
         </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to={home} replace />} />
+      {/* UNKNOWN ROUTES */}
+
+      <Route
+        path="*"
+        element={<Navigate to={home} replace />}
+      />
     </Routes>
   );
 }
+
+// ============================================
+// APP ROOT
+// ============================================
 
 export default function App() {
   return (
